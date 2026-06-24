@@ -1,0 +1,16 @@
+
+
+streamlit
+numpy
+pandas
+opencv-python
+mediapipe
+torch
+torchvision
+librosa
+sounddevice
+soundfile
+scikit-learn
+matplotlib
+Pillow
+reportlab
