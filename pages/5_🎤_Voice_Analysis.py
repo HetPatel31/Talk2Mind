@@ -34,20 +34,29 @@ if audio_file is not None:
         tmp.write(audio_file.getvalue())
         temp_path = tmp.name
 
-    result = predictor.predict_audio(temp_path)
+    try:
+        result = predictor.predict_audio(temp_path)
 
-    st.session_state["voice_emotion"] = result["emotion"]
-    st.session_state["voice_confidence"] = result["confidence"]
+        st.write("Prediction Result:", result)
 
-    c1, c2 = st.columns(2)
+        if not isinstance(result, dict):
+            st.error(f"Unexpected prediction output: {result}")
+        else:
+            st.session_state["voice_emotion"] = result.get("emotion", "Unknown")
+            st.session_state["voice_confidence"] = result.get("confidence", 0)
 
-    with c1:
-        st.metric("Detected Emotion", result["emotion"])
+            c1, c2 = st.columns(2)
 
-    with c2:
-        st.metric("Confidence", f"{result['confidence']}%")
+            with c1:
+                st.metric("Detected Emotion", result.get("emotion", "Unknown"))
 
-    st.success(f"Predicted Emotion: {result['emotion']}")
+            with c2:
+                st.metric("Confidence", f"{result.get('confidence', 0)}%")
+
+            st.success(f"Predicted Emotion: {result.get('emotion', 'Unknown')}")
+
+    except Exception as e:
+        st.exception(e)
 
 st.divider()
 
